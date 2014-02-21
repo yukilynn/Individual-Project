@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="50dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+    
+    <ScrollView android:layout_weight="60" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+        
+		<LinearLayout     
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/app_name"
+		        android:textSize="35sp" 
+		        android:layout_gravity="center"
+		        android:paddingTop="10dp"
+		        android:paddingBottom="20dp"
+		        android:id="@+id/tvName" 
+		        android:fontFamily="sans-serif-condensed" />
+		
+		    <TextView
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/app_info"
+		        android:textSize="18sp" 
+		        android:paddingBottom="50dp"
+		        android:id="@+id/tvInfo"
+		        android:fontFamily="sans-serif-condensed"  />
+		    
+	    </LinearLayout>
+	     
+    </ScrollView>
+    
+    <ScrollView android:layout_weight="40" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+		 
+		<LinearLayout     
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+		    <ImageButton 
+		        android:layout_marginBottom="60sp"
+		        android:layout_width="100sp"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"
+		        android:id="@+id/ibGallery"
+				android:background="@android:color/transparent"
+		        android:src="@drawable/gallery"  />
+
+		    <ImageButton
+		        android:layout_width="100sp"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"
+		      	android:id="@+id/ibCamera"
+		      	android:background="@android:color/transparent"
+		        android:src="@drawable/camera" />
+		    
+	    </LinearLayout>
+	    
+    </ScrollView>
+
+</LinearLayout>
