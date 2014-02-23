@@ -55,7 +55,8 @@
 		        android:layout_gravity="center"
 		        android:id="@+id/ibGallery"
 				android:background="@android:color/transparent"
-		        android:src="@drawable/gallery"  />
+		        android:src="@drawable/gallery"
+		        android:contentDescription="@string/button_galleryDesc"  />
 
 		    <ImageButton
 		        android:layout_width="100sp"
@@ -63,7 +64,8 @@
 		        android:layout_gravity="center"
 		      	android:id="@+id/ibCamera"
 		      	android:background="@android:color/transparent"
-		        android:src="@drawable/camera" />
+		        android:src="@drawable/camera" 
+		        android:contentDescription="@string/button_cameraDesc"/>
 		    
 	    </LinearLayout>
 	    

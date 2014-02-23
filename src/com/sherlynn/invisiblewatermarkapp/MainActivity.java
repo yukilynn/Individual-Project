@@ -107,19 +107,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	
 	private void imageFromGallery(int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA };
-        
-        Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex); // String picturePath contains the path of selected Image
-        cursor.close();
-        
-        Intent display = new Intent(this, ViewImageFromGallery.class);
-        display.putExtra("bitmap", picturePath);
-        startActivity(display);
+		Uri selectedImage = data.getData();
+		String[] filePathColumn = {MediaStore.Images.Media.DATA };
+
+		Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+		cursor.moveToFirst();
+
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		String picturePath = cursor.getString(columnIndex); // String picturePath contains the path of selected Image
+		cursor.close();
+
+		Intent display = new Intent(this, ViewImageFromGallery.class);
+		display.putExtra("bitmap", picturePath);
+		startActivity(display);
 	}
 
 	private void imageFromCamera(int resultCode, Intent data) {
@@ -133,18 +133,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		
 		String[] projection = {MediaStore.Images.Media.DATA}; 
 		Cursor cursor = getContentResolver().query(fileUri, projection, null, null, null); 
-        int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA); 
-        cursor.moveToFirst(); 
-        capturedImageFilePath = cursor.getString(column_index_data);
-        imageFile = new File(capturedImageFilePath);
-        if(imageFile.exists()){
-    		Intent display = new Intent(this, ViewImageFromCamera.class);
-    		display.putExtra("photo", capturedImageFilePath);
-    		startActivity(display);
-        } else if (resultCode == RESULT_CANCELED) {
-        	Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
-        } else {
-        	Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
-        }
+		int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA); 
+		cursor.moveToFirst(); 
+		capturedImageFilePath = cursor.getString(column_index_data);
+		imageFile = new File(capturedImageFilePath);
+		if(imageFile.exists()){
+			Intent display = new Intent(this, ViewImageFromCamera.class);
+			display.putExtra("photo", capturedImageFilePath);
+			startActivity(display);
+		} else if (resultCode == RESULT_CANCELED) {
+			Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
+		}
 	}	
 }
