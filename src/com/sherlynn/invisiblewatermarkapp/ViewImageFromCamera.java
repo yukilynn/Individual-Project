@@ -16,8 +16,10 @@ import android.widget.ImageView;
 public class ViewImageFromCamera extends Activity implements View.OnClickListener { //display the image taken from the camera  
 	private ImageView view;
 	private String gotImage;
-	private Bitmap bitmapImg;
+	private Bitmap bitmapImg, resultBitmap;
 	private Drawable image;
+	private int orientation;
+	private ExifInterface exifInterface;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,10 @@ public class ViewImageFromCamera extends Activity implements View.OnClickListene
 	}
 	
 	private Bitmap rotateImage(Bitmap bitmap, String filePath) {
-	    Bitmap resultBitmap = bitmap;
+	    resultBitmap = bitmap;
 	    try {
-	        ExifInterface exifInterface = new ExifInterface(gotImage);
-	        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+	        exifInterface = new ExifInterface(gotImage);
+	        orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
 	        Matrix matrix = new Matrix();
 
@@ -68,7 +70,7 @@ public class ViewImageFromCamera extends Activity implements View.OnClickListene
 	        resultBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 	    }
 	    catch (Exception exception) {
-	        Log.d("error", "Could not rotate the image");
+	        Log.d("Image error", "Could not rotate the image");
 	    }
 	    return resultBitmap;
 	}
