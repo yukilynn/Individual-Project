@@ -2,14 +2,14 @@ package com.sherlynn.invisiblewatermarkapp;
 
 import java.io.File;
 
-import android.media.ExifInterface;
+//import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
+//import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
-import android.app.AlertDialog;
+//import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +22,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-	private ImageButton gallery, camera;
-	private Intent gal, cam;
-	private final static int CAMERA_DATA = 0, IMAGE_PICK = 1;
+	private ImageButton camera; //gallery
+	private Intent cam; //gal
+	private final static int CAMERA_DATA = 0; //IMAGE_PICK = 1;
 	private long lastPress;
 	private Toast alert;
-	private Uri fileUri, selectedImage;
-	private String capturedImageFilePath = null, picturePath = null, fileName, imgModel, imgMake, phoneModel, phoneManufacturer;
+	private Uri fileUri; //selectedImage;
+	private String capturedImageFilePath = null, fileName; //picturePath = null,  imgModel, imgMake, phoneModel, phoneManufacturer;
 	private File imageFile;
 	
 	@Override
@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			} else {
 				File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "InvisibleWatermark");
 				directory.mkdirs();
-				Toast.makeText(this, "Folder to store your watermark has been created", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "Folder has been created", Toast.LENGTH_LONG).show();
 				Log.d("Storage alert", "Folder has been created");
 			}
 		}
@@ -69,10 +69,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	
 	private void buttonAssign() {
 		// TODO Auto-generated method stub
-		gallery = (ImageButton) findViewById(R.id.ibGallery);
+		//gallery = (ImageButton) findViewById(R.id.ibGallery);
 		camera = (ImageButton) findViewById(R.id.ibCamera);
 		
-		gallery.setOnClickListener(this);
+		//gallery.setOnClickListener(this);
 		camera.setOnClickListener(this);
 	}
 	
@@ -98,12 +98,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public void onClick(View button) {
 		// TODO Auto-generated method stub
 		switch(button.getId()){
-		case R.id.ibGallery:
-			//create Intent to start gallery activity			
-			gal = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI); 
-            gal.setType("image/*");
-			startActivityForResult(Intent.createChooser(gal, "Select your source"), IMAGE_PICK); 
-			break;
+		
+		// removed
+//		case R.id.ibGallery:
+//			//create Intent to start gallery activity			
+//			gal = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI); 
+//            gal.setType("image/*");
+//			startActivityForResult(Intent.createChooser(gal, "Select your source"), IMAGE_PICK); 
+//			break;
 		
 		case R.id.ibCamera:
 		    fileName = System.currentTimeMillis()+"";
@@ -129,9 +131,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		if (resultCode == Activity.RESULT_OK){
 			switch (requestCode) {
-			case IMAGE_PICK:
-				this.imageFromGallery(resultCode, data);
-				break;
+//			case IMAGE_PICK:
+//				this.imageFromGallery(resultCode, data);
+//				break;
 			case CAMERA_DATA:
 				this.imageFromCamera(resultCode, data);
 				break;
@@ -141,41 +143,41 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 	}
 	
-	private void imageFromGallery(int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		selectedImage = data.getData();
-		String[] filePathColumn = {MediaStore.Images.Media.DATA };
-
-		Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-		cursor.moveToFirst();
-
-		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		picturePath = cursor.getString(columnIndex); // String picturePath contains the path of selected Image
-		cursor.close();
-		
-		/* 
-		 * ensure that the image is taken from the device's camera before displaying.
-		 * determined by cross checking the model and manufacturer of the device with the metadata from the image
-		 */
-		
-		try {
-			ExifInterface exifInterface = new ExifInterface(picturePath);
-			imgModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL); //GT-I9300
-			imgMake = exifInterface.getAttribute(ExifInterface.TAG_MAKE); //SAMSUNG
-			phoneModel = Build.MODEL; //GT-I9300
-			phoneManufacturer = Build.MANUFACTURER; //SAMSUNG
-			 
-			if ((imgMake.equalsIgnoreCase(phoneManufacturer)) && (imgModel.equalsIgnoreCase(phoneModel))) {
-				Intent display = new Intent(this, ViewImageFromGallery.class);
-				display.putExtra("bitmap", picturePath);
-				startActivity(display);
-			} else {
-				new AlertDialog.Builder(this).setTitle("Invalid").setMessage("Image is not taken from this phone!").setNeutralButton("Ok", null).setIcon(R.drawable.error).show();
-			}
-		} catch (Exception exception) {
-			Log.d("File error", "Unable to determine phone model or phone manufacturer");
-		}
-	}
+//	private void imageFromGallery(int resultCode, Intent data) {
+//		// TODO Auto-generated method stub
+//		selectedImage = data.getData();
+//		String[] filePathColumn = {MediaStore.Images.Media.DATA };
+//
+//		Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+//		cursor.moveToFirst();
+//
+//		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//		picturePath = cursor.getString(columnIndex); // String picturePath contains the path of selected Image
+//		cursor.close();
+//		
+//		/* 
+//		 * ensure that the image is taken from the device's camera before displaying.
+//		 * determined by cross checking the model and manufacturer of the device with the metadata from the image
+//		 */
+//		
+//		try {
+//			ExifInterface exifInterface = new ExifInterface(picturePath);
+//			imgModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL); //GT-I9300
+//			imgMake = exifInterface.getAttribute(ExifInterface.TAG_MAKE); //SAMSUNG
+//			phoneModel = Build.MODEL; //GT-I9300
+//			phoneManufacturer = Build.MANUFACTURER; //SAMSUNG
+//			 
+//			if ((imgMake.equalsIgnoreCase(phoneManufacturer)) && (imgModel.equalsIgnoreCase(phoneModel))) {
+//				Intent display = new Intent(this, ViewImageFromGallery.class);
+//				display.putExtra("bitmap", picturePath);
+//				startActivity(display);
+//			} else {
+//				new AlertDialog.Builder(this).setTitle("Invalid").setMessage("Image is not taken from this phone!").setNeutralButton("Ok", null).setIcon(R.drawable.error).show();
+//			}
+//		} catch (Exception exception) {
+//			Log.d("File error", "Unable to determine phone model or phone manufacturer");
+//		}
+//	}
 
 
 	private void imageFromCamera(int resultCode, Intent data) {

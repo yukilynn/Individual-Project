@@ -47,8 +47,9 @@
 		    android:orientation="vertical"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content" >
-		    
-		    <ImageButton 
+		
+		<!-- comment as not in use -->
+		<!-- <ImageButton 
 		        android:layout_marginBottom="60sp"
 		        android:layout_width="100sp"
 		        android:layout_height="wrap_content"
@@ -56,9 +57,11 @@
 		        android:id="@+id/ibGallery"
 				android:background="@android:color/transparent"
 		        android:src="@drawable/gallery"
-		        android:contentDescription="@string/button_galleryDesc"  />
+		        android:contentDescription="@string/button_galleryDesc"  /> -->	
 
 		    <ImageButton
+		        android:layout_marginTop="40sp"
+		        android:layout_marginBottom="60sp"
 		        android:layout_width="100sp"
 		        android:layout_height="wrap_content"
 		        android:layout_gravity="center"

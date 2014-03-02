@@ -12,6 +12,8 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />
+	<supports-screens android:largeScreens="true"
+                  android:xlargeScreens="true" />
 
     <application
 		android:allowBackup="true"
@@ -34,11 +36,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
+        <!-- comment as not in use -->
+		<!-- <activity
             android:name=".ViewImageFromGallery"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.sherlynn.invisiblewatermarkapp.VIEWIMAGEFROMGALLERY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity> -->
+        <activity
+            android:name=".WatermarkActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.sherlynn.invisiblewatermarkapp.WATERMARKACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
