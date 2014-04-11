@@ -3,7 +3,7 @@
 
     <string name="app_name">Invisible Watermark</string>
     <string name="app_info">Adds (invisible) watermark into your image that you have taken from your phone\'s camera.</string>
-    <string name="button_watermark">Select watermark image</string>
+    <string name="button_watermark">Watermark it!</string>
     <string name="button_setup">Setup Watermark Image</string><string name="button_galleryDesc">Button to access gallery</string><string name="button_cameraDesc">Button to access native camera</string><string name="iv_Desc">Displays image</string><string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -13,11 +12,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ViewImageFromCamera extends Activity implements View.OnClickListener { //display the image taken from the camera  
 	private ImageView view;
@@ -26,11 +25,7 @@ public class ViewImageFromCamera extends Activity implements View.OnClickListene
 	private Drawable image;
 	private int orientation;
 	private ExifInterface exifInterface;
-	private Button setup, watermark; 
-	private Intent gal; //, watermarkIntent;
-	private final static int IMAGE_PICK = 1;
-	//private Uri selectedImage;
-	private String picturePath = null;
+	private Button watermark; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +52,8 @@ public class ViewImageFromCamera extends Activity implements View.OnClickListene
 	private void initialise() {
 		// TODO Auto-generated method stub
 		view = (ImageView) findViewById(R.id.ivDisplay);
-		setup = (Button) findViewById(R.id.bSetup);
 		watermark = (Button) findViewById(R.id.bWatermark);
 		
-		setup.setOnClickListener(this);
 		watermark.setOnClickListener(this);
 	}
 	
@@ -107,54 +100,8 @@ public class ViewImageFromCamera extends Activity implements View.OnClickListene
 	@Override
 	public void onClick(View button) {
 		// TODO Auto-generated method stub
-		switch(button.getId()){
-		
-		case R.id.bSetup:
-			gal = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI); 
-            gal.setType("image/*");
-			startActivityForResult(Intent.createChooser(gal, "Select your source"), IMAGE_PICK); 
-			break;
-		
-		case R.id.bWatermark:
-//			watermarkIntent = new Intent(this, WatermarkActivity.class);
-//			watermarkIntent.putExtra("photo", gotImage);
-//			startActivity(watermarkIntent);
-		}
-	}
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		if (resultCode == Activity.RESULT_OK){
-			switch (requestCode) {
-			case IMAGE_PICK:
-				this.watermarkFromGallery(resultCode, data);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	
-	private void watermarkFromGallery(int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		//selectedImage = data.getData();
-		String[] filePathColumn = {MediaStore.Images.Media.DATA };
-		
-		// display the watermark folder
-		Cursor cursor = getContentResolver().query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				filePathColumn, 
-                MediaStore.Images.Media.DATA + " like ? ",
-                new String[] {"%/InvisibleWatermark/%"},  
-                null);
-
-		cursor.moveToFirst();
-
-		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		picturePath = cursor.getString(columnIndex);
-		cursor.close();
-		
-		Intent display = new Intent(this, ViewImageFromGallery.class);
-		display.putExtra("bitmap", picturePath);
-		startActivity(display);
+		Intent watermarkTime= new Intent(this, WatermarkActivity.class);
+		watermarkTime.putExtra("watermark", gotImage);
+		startActivity(watermarkTime);
 	}
 }

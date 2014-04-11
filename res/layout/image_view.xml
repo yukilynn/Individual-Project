@@ -12,13 +12,6 @@
 		android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher"
         android:contentDescription="@string/iv_Desc" />
-
-    <Button
-        android:id="@+id/bSetup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/button_setup" />
     
     <Button
         android:id="@+id/bWatermark"

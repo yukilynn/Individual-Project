@@ -1,7 +1,13 @@
 package com.sherlynn.invisiblewatermarkapp;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 //import android.media.ExifInterface;
 import android.net.Uri;
 //import android.os.Build;
@@ -29,7 +35,40 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Toast alert;
 	private Uri fileUri; //selectedImage;
 	private String capturedImageFilePath = null, fileName; //picturePath = null,  imgModel, imgMake, phoneModel, phoneManufacturer;
-	private File imageFile;
+	//private File imageFile;
+	private SimpleDateFormat sdf;
+	private Cursor cursor;
+	
+	static {
+	    if(!OpenCVLoader.initDebug()) {
+	        Log.d("ERROR", "Unable to load OpenCV");
+	    } else {
+	        Log.d("SUCCESS", "OpenCV loaded");
+	    }
+	}
+    
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this){
+		@Override
+		public void onManagerConnected(int status) {
+			// TODO Auto-generated method stub
+			switch (status){
+				case LoaderCallbackInterface.SUCCESS:
+				{
+					Log.i("Success", "OpenCV loaded successfully");
+				} break;
+				default:
+				{
+					super.onManagerConnected(status);
+				} break;
+			}	
+		}
+	};
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +91,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 				Log.d("Storage error", "No SDCard");
 			} else {
-				File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "InvisibleWatermark");
+				File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "InvisibleWatermark");
 				directory.mkdirs();
 				Toast.makeText(this, "Folder has been created", Toast.LENGTH_LONG).show();
 				Log.d("Storage alert", "Folder has been created");
@@ -97,7 +136,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	public void onClick(View button) {
 		// TODO Auto-generated method stub
-		switch(button.getId()){
+		Date date = new Date() ;
+		sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()) ;
+		File filename = new File(sdf.format(date) + ".jpg");
+		fileName = filename.toString();
+
+		//create parameters for Intent with filename
+		ContentValues values = new ContentValues();
+		values.put(MediaStore.Images.Media.TITLE, fileName);
+		values.put(MediaStore.Images.Media.DESCRIPTION,"Image captured for Invisible Watermark purposes");
+
+		//imageUri is the current activity attribute, define and save it for later usage
+		fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+		//create Intent to start camera activity
+		cam = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		cam.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+		startActivityForResult(cam, CAMERA_DATA);
 		
 		// removed
 //		case R.id.ibGallery:
@@ -106,40 +161,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //            gal.setType("image/*");
 //			startActivityForResult(Intent.createChooser(gal, "Select your source"), IMAGE_PICK); 
 //			break;
-		
-		case R.id.ibCamera:
-		    fileName = System.currentTimeMillis()+"";
-		    
-		    //create parameters for Intent with filename
-		    ContentValues values = new ContentValues();
-		    values.put(MediaStore.Images.Media.TITLE, fileName);
-		    values.put(MediaStore.Images.Media.DESCRIPTION,"Image capture by camera");
-		    
-		    //imageUri is the current activity attribute, define and save it for later usage
-		    fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-		    
-		    //create Intent to start camera activity
-		    cam = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		    cam.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-			startActivityForResult(cam, CAMERA_DATA);
-			break;
-		}
+
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		if (resultCode == Activity.RESULT_OK){
-			switch (requestCode) {
 //			case IMAGE_PICK:
 //				this.imageFromGallery(resultCode, data);
 //				break;
-			case CAMERA_DATA:
-				this.imageFromCamera(resultCode, data);
-				break;
-			default:
-				break;
-			}
+			this.imageFromCamera(resultCode, data);
 		}
 	}
 	
@@ -179,35 +211,44 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //		}
 //	}
 
-
 	private void imageFromCamera(int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		
-		/* not in use */
-//	    bmp = (Bitmap) data.getExtras().get("data");
-//	
-//	    Intent display = new Intent(this, ViewImageFromCamera.class);
-//	    display.putExtra("photo", bmp);
-//	    
-//	    startActivity(display);
-		
+		try {
 		String[] projection = {MediaStore.Images.Media.DATA}; 
 		
-		Cursor cursor = getContentResolver().query(fileUri, projection, null, null, null); 
+		cursor = getContentResolver().query(fileUri, projection, null, null, null); 
 		int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA); 
 		cursor.moveToFirst(); 
 		
 		capturedImageFilePath = cursor.getString(column_index_data);
-		imageFile = new File(capturedImageFilePath);
+		//imageFile = new File(capturedImageFilePath);
 		
-		if(imageFile.exists()){
-			Intent display = new Intent(this, ViewImageFromCamera.class);
-			display.putExtra("photo", capturedImageFilePath);
-			startActivity(display);
-		} else if (resultCode == RESULT_CANCELED) {
-			Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT).show();
+		Intent display = new Intent(this, ViewImageFromCamera.class);
+		display.putExtra("photo", capturedImageFilePath);
+        Toast.makeText(this, capturedImageFilePath + " saved", Toast.LENGTH_SHORT).show();
+		startActivity(display);
+		
+		} catch (Exception e) {
+			Log.e("Unexpected error", e.toString());
+			e.printStackTrace();
+			Toast.makeText(this, "Image load error, try again", Toast.LENGTH_SHORT).show();
 		}
-	}	
+
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+	    super.onSaveInstanceState(outState);
+	    if (fileUri != null) {
+	        outState.putString("cameraImageUri", fileUri.toString());
+	    }
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	    super.onRestoreInstanceState(savedInstanceState);
+	    if (savedInstanceState.containsKey("cameraImageUri")) {
+	    	fileUri = Uri.parse(savedInstanceState.getString("cameraImageUri"));
+	    }
+	}
 }
